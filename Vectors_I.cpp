@@ -48,6 +48,11 @@ int NotLearning::getID()const
     return ID;
 }
 
+void NotLearning::setID(int newID)
+{
+    ID = newID;
+}
+
 int NotLearning::getDay()const
 {
     return day;
@@ -83,37 +88,65 @@ std::string NotLearning::getMonth()const
     return month;
 }
 
-void fillVector(std::vector<NotLearning>& newClass)
+void fillVector(std::vector<NotLearning>& newClass, const int TotalStudent)
 {
-    int total;
-    std::cin >> total;
 
-    for (int i = 0; i < total; i++)
+    if (TotalStudent > 0)
     {
-        NotLearning newStudent;
-        newClass.push_back(newStudent);
+        for (int i = 0; i < TotalStudent; i++)
+        {
+            NotLearning newStudent;
+            newClass.push_back(newStudent);
+        }
+    }
+    else
+    {
+        std::cout << "Please, enter a numeric value that does not contain numbers below 0 and alpfabetical chars." << std::endl;
+        exit(-1);
     }
 }
 
-void showVector(const std::vector<NotLearning> newClass)
+void showVector(const std::vector<NotLearning>& newClass)
 {
-    unsigned int size = newClass.size();
+    size_t size = newClass.size();
     std::cout << "Total size of vector: " << size << std::endl;
     std::cout << "Total capacity of vector: " << newClass.capacity() << std::endl;
-
-    for (unsigned int i = 0; i < size; i++)
+    std::cout << "             ID   Average Name       Surname    City            Day Month    Year" << std::endl;
+    for (size_t i = 0; i < size; i++)
     {
-        std::cout << "Student " << i << ": " << std::flush;
-        std::cout << newClass[i].getID() << " " << std::flush;
-        std::cout << newClass[i].getAverage() << " " << std::flush;
-        std::cout << newClass[i].getName() << " " << std::flush;
-        std::cout << newClass[i].getSurname() << " " << std::flush;
-        std::cout << newClass[i].getCity() << " " << std::flush;
-        std::cout << newClass[i].getDay() << " " << std::flush;
-        std::cout << newClass[i].getMonth() << " " << std::flush;
-        std::cout << newClass[i].getYear() << " " << std::endl;
+        std::cout << "Person:" << std::left << std::setw(2) << i << " => " << std::flush;
+        std::cout << std::left << std::setw(4) << newClass[i].getID() << " " << std::flush;
+        std::cout << std::left << std::setw(7) << std::setprecision(2) << newClass[i].getAverage() << " " << std::flush;
+        std::cout << std::left << std::setw(10) << newClass[i].getName() << " " << std::flush;
+        std::cout << std::left << std::setw(10) << newClass[i].getSurname() << " " << std::flush;
+        std::cout << std::left << std::setw(15) << newClass[i].getCity() << " " << std::flush;
+        std::cout << std::left << std::setw(3) << newClass[i].getDay() << " " << std::flush;
+        std::cout << std::left << std::setw(8) << newClass[i].getMonth() << " " << std::flush;
+        std::cout << std::left << std::setw(4) << newClass[i].getYear() << " " << std::flush;
+        std::cout << std::endl;
     }
     std::cout << std::endl;
+}
+
+void saveVector(const std::vector<NotLearning>& newClass)
+{
+    std::ofstream outputVector;
+    outputVector.open("VectorResults.txt");
+    outputVector << "             ID   Average Name       Surname    City            Day Month    Year" << std::endl;
+    for (int i = 0; i < newClass.size(); i++)
+    {
+        outputVector << "Person:" << std::left << std::setw(2) << i << " => " << std::flush;
+        outputVector << std::left << std::setw(4) << newClass[i].getID() << " " << std::flush;
+        outputVector << std::left << std::setw(7) << std::setprecision(2) << newClass[i].getAverage() << " " << std::flush;
+        outputVector << std::left << std::setw(10) << newClass[i].getName() << " " << std::flush;
+        outputVector << std::left << std::setw(10) << newClass[i].getSurname() << " " << std::flush;
+        outputVector << std::left << std::setw(15) << newClass[i].getCity() << " " << std::flush;
+        outputVector << std::left << std::setw(3) << newClass[i].getDay() << " " << std::flush;
+        outputVector << std::left << std::setw(8) << newClass[i].getMonth() << " " << std::flush;
+        outputVector << std::left << std::setw(4) << newClass[i].getYear() << " " << std::flush;
+        outputVector << std::endl;
+    }
+    outputVector.close();
 }
 
 bool cmp_by_id(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
