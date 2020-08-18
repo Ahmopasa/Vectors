@@ -39,7 +39,8 @@ NotLearning::NotLearning()
     };
     static const std::string pmons[] = { "","Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik" };
     int counter_date = rand() % 12 + 1;
-    day = daytabs[check_leap(year)][counter_date];
+    int tempDay = daytabs[check_leap(year)][counter_date];
+    day = rand() % tempDay + 1;
     month = pmons[counter_date];
 }
 
@@ -68,9 +69,20 @@ double NotLearning::getAverage()const
     return average;
 }
 
+void NotLearning::setAverage(double newAverage)
+{
+    this->average = newAverage;
+}
+
 std::string NotLearning::getName()const
 {
     return name;
+}
+
+void NotLearning::setName(char* _newName)
+{
+    std::string newName(_newName);
+    this->name = newName;
 }
 
 std::string NotLearning::getSurname()const
@@ -78,14 +90,54 @@ std::string NotLearning::getSurname()const
     return surname;
 }
 
+void NotLearning::setSurname(char* _newSurname)
+{
+    std::string newSurname(_newSurname);
+    this->surname = newSurname;
+}
+
 std::string NotLearning::getCity()const
 {
     return city;
 }
 
+void NotLearning::setCity(char* _newCity)
+{
+
+    std::string newCity(_newCity);
+    this->city = newCity;
+}
+
 std::string NotLearning::getMonth()const
 {
     return month;
+}
+
+void NotLearning::setDates(int newYear, char* newMonth, int newDay)
+{
+    year = newYear;
+
+    static const int daytabs[][13] = {
+                {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+                {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+    };
+    static const char* pmons[] = { "","Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik" };
+
+    int month_counter = 0;
+    for (int i = 0; i < 13; i++)
+    {
+        if (!strcmp(newMonth, pmons[i]))
+            month_counter++;
+    }
+    int tempDay = daytabs[check_leap(year)][month_counter];
+    if (newDay <= tempDay)
+    {
+        day = newDay;
+    }
+
+    std::string tempMonth(newMonth);
+    this->month = tempMonth;
+
 }
 
 void fillVector(std::vector<NotLearning>& newClass, const int TotalStudent)
@@ -103,6 +155,46 @@ void fillVector(std::vector<NotLearning>& newClass, const int TotalStudent)
     {
         std::cout << "Please, enter a numeric value that does not contain numbers below 0 and alpfabetical chars." << std::endl;
         exit(-1);
+    }
+}
+
+void fillVectorByText(std::vector<NotLearning>& newClass, const int TotalStudent)
+{
+    
+    FILE* FileHandler[5];
+    const char* FileNames[] = {"143", "430", "691", "800", "1053"};
+
+    for (int i = 0; i < TotalStudent; i++)
+    {
+        NotLearning newStudent;
+        newClass.push_back(newStudent);
+    }
+
+    double tempAverages = .0;
+    char tempNames[20] = " ";
+    char tempSurnames[20] = " ";;
+    char tempCity[20] = " ";;
+    int tempDay = 0;
+    char tempMonth[20] = " ";;
+    int tempYear = 0;
+
+    for (int i = 0; i < 5; i++)
+    {
+        FileHandler[i] = fopen(FileNames[i], "r");
+        if (!FileHandler[i])
+        {
+            std::cout << "Failed to open the file. Name: " << FileNames[i] << std::endl;
+        }
+        else
+        {
+            if (fscanf(FileHandler[i], "%lf %s %s %s %d %s %d",&tempAverages, tempNames, tempSurnames, tempCity, &tempDay, tempMonth, &tempYear)) {}
+            newClass[i].setAverage(tempAverages);
+            newClass[i].setName(tempNames);
+            newClass[i].setSurname(tempSurnames);
+            newClass[i].setCity(tempCity);
+            newClass[i].setDates(tempYear, tempMonth, tempDay);
+            fclose(FileHandler[i]);
+        }
     }
 }
 
@@ -130,23 +222,24 @@ void showVector(const std::vector<NotLearning>& newClass)
 
 void saveVector(const std::vector<NotLearning>& newClass)
 {
-    std::ofstream outputVector;
-    outputVector.open("VectorResults.txt");
-    outputVector << "             ID   Average Name       Surname    City            Day Month    Year" << std::endl;
-    for (int i = 0; i < newClass.size(); i++)
+    std::vector<std::string> FileNames;
+    for (int i = 0; i < 5; i++)
     {
-        outputVector << "Person:" << std::left << std::setw(2) << i << " => " << std::flush;
-        outputVector << std::left << std::setw(4) << newClass[i].getID() << " " << std::flush;
-        outputVector << std::left << std::setw(7) << std::setprecision(2) << newClass[i].getAverage() << " " << std::flush;
-        outputVector << std::left << std::setw(10) << newClass[i].getName() << " " << std::flush;
-        outputVector << std::left << std::setw(10) << newClass[i].getSurname() << " " << std::flush;
-        outputVector << std::left << std::setw(15) << newClass[i].getCity() << " " << std::flush;
-        outputVector << std::left << std::setw(3) << newClass[i].getDay() << " " << std::flush;
-        outputVector << std::left << std::setw(8) << newClass[i].getMonth() << " " << std::flush;
-        outputVector << std::left << std::setw(4) << newClass[i].getYear() << " " << std::flush;
-        outputVector << std::endl;
+        FileNames.push_back(std::to_string(newClass[i].getID()));
     }
-    outputVector.close();
+        
+    for (int i = 0; i < FileNames.size(); i++)
+    {
+        std::ofstream FileHandler;
+        FileHandler.open(FileNames[i]);
+        FileHandler << newClass[i].getAverage() << " " << newClass[i].getName() << " " << newClass[i].getSurname() << " " << newClass[i].getCity() << " " << newClass[i].getDay() << " " << newClass[i].getMonth() << " " << " " << newClass[i].getYear() << " " << std::endl;
+        FileHandler.close();
+    }
+}
+
+void copyVector(const std::vector<NotLearning>& newClass, std::vector<NotLearning>& myNewClass)
+{
+    myNewClass.assign(newClass.begin(), newClass.end());
 }
 
 bool cmp_by_id(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
