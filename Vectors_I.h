@@ -30,27 +30,24 @@ public:
     void setID(int);
     
     int getDay()const; // Function to used to initialise private variable "day" of the class via the constructor.
-    void setDay(int);
-    
     int getYear()const; // Function to used to initialise private variable "year" of the class via the constructor.
-    void setYear(int);
-    
+   
     double getAverage()const; // Function to used to initialise private variable "average" of the class via the constructor.
     void setAverage(double);
 
     std::string getName()const; // Function to used to initialise private variable "name" of the class via the constructor.
-    void setName(std::string);
+    void setName(char*);
     
     std::string getSurname()const; // Function to used to initialise private variable "surname" of the class via the constructor.
-    void setSurname(std::string);
+    void setSurname(char* );
     
     std::string getCity()const; // Function to used to initialise private variable "city" of the class via the constructor.
-    void setCity(std::string);
+    void setCity(char* );
     
     std::string getMonth()const; // Function to used to initialise private variable "month" of the class via the constructor.
-    std::string setMonth(std::string);
 
-
+    void setDates(int, char*, int);
+    
 private:
     int ID;
     int day;
@@ -66,6 +63,7 @@ private:
 
 /******************************* A Place To Define Global Functions *******************************/
 void fillVector(std::vector<NotLearning>&, const int);
+void fillVectorByText(std::vector<NotLearning>&, const int);
 void showVector(const std::vector<NotLearning>&);
 void saveVector(const std::vector<NotLearning>&);
 void copyVector(const std::vector<NotLearning>&, std::vector<NotLearning>&);
