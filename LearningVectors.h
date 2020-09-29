@@ -1,5 +1,5 @@
-#ifndef LEARNINGCPP_H
-#define LEARNINGCPP_H
+#ifndef LEARNINGVECTORS_H
+#define LEARNINGVECTORS_H
 //#define DebugMessages // Used to activa debugging messages. ( Make it uncomment )
 
 /******************************* A Place To Define Related Macros ******************************/
@@ -77,4 +77,4 @@ void sortVectorByMonth(std::vector<NotLearning>&);
 void sortVectorByYear(std::vector<NotLearning>&);
 void sortVectorByDetail(std::vector<NotLearning>&);
 
-#endif // !LEARNINGCPP_H
+#endif // !LEARNINGVECTORS_H
