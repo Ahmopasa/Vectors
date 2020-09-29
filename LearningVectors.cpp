@@ -1,389 +1,293 @@
+/**************************A PLACE TO INCLUDE LIBS.**************************/
 #define _CRT_SECURE_NO_WARNINGS
-#include "LearningVectors.h"
+#include "LearningLinkedList.h"
 
-#define check_leap(year) ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0)) // Return 1 / 0 if the year is leap year or not.
-
-NotLearning::NotLearning()
+/**************************A PLACE TO DEFINE MACROS**************************/
+#define check_leap(year) ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+/********************A PLACE TO DECLARE GLOBAL VARIABLES*********************/
+struct linkedList
 {
+	int ID;
+	int day;
+	int year;
 
-    ID = rand() % 1001 + 101;
-    average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
+	double average;
+	struct linkedList* nextPtr;
 
-    static const std::string nameList[] = { "AHMET", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ELIZABETH", "AHMET", "ELLEN", "ELLEN", "ELLEN", "EPIPHANY", "EPPIE", "ETTA", "EULA", "FOREST", "FORD", "FOSTER", "FOX",
-                                    "FOREST", "FORD", "FOSTER", "FOX", "EPIPHANY", "EPPIE", "ETTA", "EULA", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "EULA",
-                                    "AHMET", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ELIZABETH", "AHMET", "ELLEN", "ELLEN", "ELLEN", "EPIPHANY", "EPPIE", "ETTA", "EULA", "FOREST", "FORD", "FOSTER", "FOX",
-                                    "FOREST", "FORD", "FOSTER", "FOX", "EPIPHANY", "EPPIE", "ETTA", "EULA", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "EULA",
-    };
-    name = nameList[rand() % 80];
+	char month[15];
+	char name[20];
+	char surname[20];
+	char city[20];
+}student;
 
-    static const std::string surnameList[] = { "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON",
-                                      "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON",	"GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ"	,  "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA",
-                                      "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON",
-                                      "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON", "JOHNSON", "ABBESTEGE", "WILSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS",
-                                      "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON", "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE",
-    };
-    surname = surnameList[rand() % 80];
+typedef struct linkedList linkedList;
 
-    static const std::string  cityList[] = { "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Colorado",
-                                 "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Louisiana", "Maine", "Maryland", "Massachusetts",
-                                 "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware",
-                                 "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Louisiana", "Maine", "Maryland", "Massachusetts", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware",
-                                 "Florida", "Georgia", "Hawaii", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida"
-    };
-    city = cityList[rand() % 80];
+typedef enum SORT
+{
+	EMPTY, SORT_BY_ID, SORT_BY_SCORE, SORT_BY_NAME, SORT_BY_SURNAME, SORT_BY_CITY, SORT_BY_YEAR, SORT_BY_MONTH, SORT_BY_DAY, SORT_BY_DEEPLY
 
-    year = rand() % (2020 - 1989 + 1) + 1989;
-    static const int daytabs[][13] = {
-                {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-                {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-    };
-    static const std::string pmons[] = { "","Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik" };
-    int counter_date = rand() % 12 + 1;
-    int tempDay = daytabs[check_leap(year)][counter_date];
-    day = rand() % tempDay + 1;
-    month = pmons[counter_date];
+}SORT;
+
+/**************************A PLACE TO DEFINE NON-GLOBAL FUNCTIONS**************************/
+// A Random Name Generator
+PRIVATE const char* getName()
+{
+	static const char* const nameList[80] = { "AHMET", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ELIZABETH", "AHMET", "ELLEN", "ELLEN", "ELLEN", "EPIPHANY", "EPPIE", "ETTA", "EULA", "FOREST", "FORD", "FOSTER", "FOX",
+											"FOREST", "FORD", "FOSTER", "FOX", "EPIPHANY", "EPPIE", "ETTA", "EULA", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "EULA",
+											"AHMET", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ELIZABETH", "AHMET", "ELLEN", "ELLEN", "ELLEN", "EPIPHANY", "EPPIE", "ETTA", "EULA", "FOREST", "FORD", "FOSTER", "FOX",
+											"FOREST", "FORD", "FOSTER", "FOX", "EPIPHANY", "EPPIE", "ETTA", "EULA", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "ABRAHAM", "ABIGAIL", "ABBIE", "AHMET", "ELIZABETH", "ELLA", "EULA",
+	};
+
+	return nameList[rand() % 80];
 }
 
-int NotLearning::getID()const
+// A Random Surname Generator
+PRIVATE const char* getSurname()
 {
-    return ID;
+	static const char* const surnameList[] = { "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON",
+											  "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON",	"GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ"	,  "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA",
+											  "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS", "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON",
+											  "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON", "JOHNSON", "ABBESTEGE", "WILSON", "ABBESTEGE", "HARRIS", "JOHNSON", "HARRIS",
+											  "WILSON", "JOHNSON", "GARCIA", "GARCIA", "JOHNSON", "RODRIGUEZ", "RODRIGUEZ", "COLEMAN", "WILSON", "JOHNSON", "ABBESTEGE", "WILSON", "JOHNSON", "ABBESTEGE",
+	};
+
+	return surnameList[rand() % 80];
 }
 
-void NotLearning::setID(int newID)
+// A Random City Name Generator
+PRIVATE const char* getCity()
 {
-    ID = newID;
+	static const char* const cityList[] = { "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Colorado",
+									 "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Louisiana", "Maine", "Maryland", "Massachusetts",
+									 "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware",
+									 "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware", "Louisiana", "Maine", "Maryland", "Massachusetts", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Connecticut", "Delaware",
+									 "Florida", "Georgia", "Hawaii", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida"
+	};
+
+	return cityList[rand() % 80];
 }
 
-int NotLearning::getDay()const
+// A Random Date Generator
+PRIVATE void getDate(void* head)
 {
-    return day;
-}
+	linkedList* first = (linkedList*)head;
+	
+	first->year = rand() % (2020 - 1989 + 1) + 1989;
+	
+	static const int daytabs[][13] = {
+			{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+			{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+	};
+	static const char* const pmons[] = { "","Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik" };
 
-int NotLearning::getYear()const
-{
-    return year;
-}
-
-double NotLearning::getAverage()const
-{
-    return average;
-}
-
-void NotLearning::setAverage(double newAverage)
-{
-    this->average = newAverage;
-}
-
-std::string NotLearning::getName()const
-{
-    return name;
-}
-
-void NotLearning::setName(char* _newName)
-{
-    std::string newName(_newName);
-    this->name = newName;
-}
-
-std::string NotLearning::getSurname()const
-{
-    return surname;
-}
-
-void NotLearning::setSurname(char* _newSurname)
-{
-    std::string newSurname(_newSurname);
-    this->surname = newSurname;
-}
-
-std::string NotLearning::getCity()const
-{
-    return city;
-}
-
-void NotLearning::setCity(char* _newCity)
-{
-
-    std::string newCity(_newCity);
-    this->city = newCity;
-}
-
-std::string NotLearning::getMonth()const
-{
-    return month;
-}
-
-void NotLearning::setDates(int newYear, char* newMonth, int newDay)
-{
-    year = newYear;
-
-    static const int daytabs[][13] = {
-                {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-                {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-    };
-    static const char* pmons[] = { "","Ocak","Subat","Mart","Nisan","Mayis","Haziran","Temmuz","Agustos","Eylul","Ekim","Kasim","Aralik" };
-
-    int month_counter = 0;
-    for (int i = 0; i < 13; i++)
-    {
-        if (!strcmp(newMonth, pmons[i]))
-            month_counter++;
-    }
-    int tempDay = daytabs[check_leap(year)][month_counter];
-    if (newDay <= tempDay)
-    {
-        day = newDay;
-    }
-
-    std::string tempMonth(newMonth);
-    this->month = tempMonth;
+	int counter_date = rand() % 12 + 1;
+	int tempDay = daytabs[check_leap(first->year)][counter_date];
+	first->day = rand() % tempDay + 1;
+	strcpy(first->month, pmons[counter_date]);
 
 }
 
-void fillVector(std::vector<NotLearning>& newClass, const int TotalStudent)
+// A FUNCTION TO INCREASE THE LIST RIGHTWARD
+PRIVATE linkedList* AppendToRight(linkedList** head)
 {
+	if (*head == NULL)
+	{
+		*head = (linkedList*)malloc(sizeof(linkedList));
+		if (*head == NULL)
+			exit(EXIT_FAILURE);
 
-    if (TotalStudent > 0)
-    {
-        for (int i = 0; i < TotalStudent; i++)
-        {
-            NotLearning newStudent;
-            newClass.push_back(newStudent);
-        }
-    }
-    else
-    {
-        std::cout << "Please, enter a numeric value that does not contain numbers below 0 and alpfabetical chars." << std::endl;
-        exit(-1);
-    }
+		(*head)->ID = rand() % 1001 + 101;
+		(*head)->average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
+		strcpy((*head)->city, getCity());
+		getDate(*head);
+		strcpy((*head)->name, getName());
+		strcpy((*head)->surname, getSurname());
+		(*head)->nextPtr = NULL;
+		return *head;
+	}
+
+	else
+	{
+		linkedList* first = *head;
+		linkedList* newNode = (linkedList*)malloc(sizeof(linkedList));
+		if (newNode == NULL)
+			exit(EXIT_FAILURE);
+
+		newNode->ID = rand() % 1001 + 101;
+		newNode->average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
+		strcpy(newNode->city, getCity());
+		getDate(newNode);
+		strcpy(newNode->name, getName());
+		strcpy(newNode->surname, getSurname());
+		newNode->nextPtr = NULL;
+
+		for (; first->nextPtr != NULL; first = first->nextPtr)
+			;
+
+		first->nextPtr = newNode;
+
+		return *head;
+	}
+	return NULL;
 }
 
-void fillVectorByText(std::vector<NotLearning>& newClass, const int TotalStudent)
+// A FUNCTION TO INCREASE THE LIST LEFTWARD
+PRIVATE linkedList* AppendToLeft(linkedList** head)
 {
+	if (*head == NULL)
+	{
+		*head = (linkedList*)malloc(sizeof(linkedList));
+		if (*head == NULL)
+			exit(EXIT_FAILURE);
 
-    FILE* FileHandler[5];
-    const char* FileNames[] = { "143", "430", "691", "800", "1053" };
+		(*head)->ID = rand() % 1001 + 101;
+		(*head)->average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
+		strcpy((*head)->city, getCity());
+		getDate(*head);
+		strcpy((*head)->name, getName());
+		strcpy((*head)->surname, getSurname());
+		(*head)->nextPtr = NULL;
 
-    for (int i = 0; i < TotalStudent; i++)
-    {
-        NotLearning newStudent;
-        newClass.push_back(newStudent);
-    }
+		return *head;
+	}
 
-    double tempAverages = .0;
-    char tempNames[20] = " ";
-    char tempSurnames[20] = " ";;
-    char tempCity[20] = " ";;
-    int tempDay = 0;
-    char tempMonth[20] = " ";;
-    int tempYear = 0;
+	else
+	{
+		linkedList* newNode = (linkedList*)malloc(sizeof(linkedList));
+		if (newNode == NULL)
+			exit(EXIT_FAILURE);
 
-    for (int i = 0; i < 5; i++)
-    {
-        FileHandler[i] = fopen(FileNames[i], "r");
-        if (!FileHandler[i])
-        {
-            std::cout << "Failed to open the file. Name: " << FileNames[i] << std::endl;
-        }
-        else
-        {
-            if (fscanf(FileHandler[i], "%lf %s %s %s %d %s %d", &tempAverages, tempNames, tempSurnames, tempCity, &tempDay, tempMonth, &tempYear)) {}
-            newClass[i].setAverage(tempAverages);
-            newClass[i].setName(tempNames);
-            newClass[i].setSurname(tempSurnames);
-            newClass[i].setCity(tempCity);
-            newClass[i].setDates(tempYear, tempMonth, tempDay);
-            fclose(FileHandler[i]);
-        }
-    }
+		newNode->ID = rand() % 1001 + 101;
+		newNode->average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
+		strcpy(newNode->city, getCity());
+		getDate(newNode);
+		strcpy(newNode->name, getName());
+		strcpy(newNode->surname, getSurname());
+
+		newNode->nextPtr = *head;
+
+		return newNode;
+	}
+
+	return NULL;
 }
 
-void showVector(const std::vector<NotLearning>& newClass)
+
+/**************************A PLACE TO DECLARE GLOBAL FUNCTIONS****************************/
+
+//A FUNCTION TO ADD A NEW NODE AT THE START OF THE LIST
+PUBLIC void* AddBeforeTheFirstNode(void** voidPtr, int total_amount)
 {
-    size_t size = newClass.size();
-    std::cout << "Total size of vector: " << size << std::endl;
-    std::cout << "Total capacity of vector: " << newClass.capacity() << std::endl;
-    std::cout << "             ID   Average Name       Surname    City            Day Month    Year" << std::endl;
-    for (size_t i = 0; i < size; i++)
-    {
-        std::cout << "Person:" << std::left << std::setw(2) << i << " => " << std::flush;
-        std::cout << std::left << std::setw(4) << newClass[i].getID() << " " << std::flush;
-        std::cout << std::left << std::setw(7) << std::setprecision(2) << newClass[i].getAverage() << " " << std::flush;
-        std::cout << std::left << std::setw(10) << newClass[i].getName() << " " << std::flush;
-        std::cout << std::left << std::setw(10) << newClass[i].getSurname() << " " << std::flush;
-        std::cout << std::left << std::setw(15) << newClass[i].getCity() << " " << std::flush;
-        std::cout << std::left << std::setw(3) << newClass[i].getDay() << " " << std::flush;
-        std::cout << std::left << std::setw(8) << newClass[i].getMonth() << " " << std::flush;
-        std::cout << std::left << std::setw(4) << newClass[i].getYear() << " " << std::flush;
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
+	linkedList** head = (linkedList**)(voidPtr);
 
-void saveVector(const std::vector<NotLearning>& newClass)
-{
-    std::vector<std::string> FileNames;
-    for (unsigned int i = 0; i < 5; i++)
-    {
-        FileNames.push_back(std::to_string(newClass[i].getID()));
-    }
+	fprintf(stdout, "%d new nodes will be added to the list. So, the list will enlarge leftward...\n", total_amount);
 
-    for (unsigned int i = 0; i < FileNames.size(); i++)
-    {
-        std::ofstream FileHandler;
-        FileHandler.open(FileNames[i]);
-        FileHandler << newClass[i].getAverage() << " " << newClass[i].getName() << " " << newClass[i].getSurname() << " " << newClass[i].getCity() << " " << newClass[i].getDay() << " " << newClass[i].getMonth() << " " << " " << newClass[i].getYear() << " " << std::endl;
-        FileHandler.close();
-    }
-}
+	linkedList* first = *head;
+	for (int i = 0; i < total_amount; i++)
+		first = AppendToLeft(&first);
 
-void copyVector(const std::vector<NotLearning>& newClass, std::vector<NotLearning>& myNewClass)
-{
-    myNewClass.assign(newClass.begin(), newClass.end());
-}
-
-bool cmp_by_id(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return one.getID() < two.getID();
-}
-
-bool cmp_by_average(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return (one.getAverage() < two.getAverage());
-}
-
-bool cmp_by_name(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return one.getName() < two.getName();
-}
-
-bool cmp_by_surname(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return one.getSurname() < two.getSurname();
-}
-
-bool cmp_by_city(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return one.getCity() < two.getCity();
-}
-
-bool cmp_by_day(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID".
-{
-    return one.getDay() < two.getDay();
-}
-
-bool cmp_by_month(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "month".
-{
-    return one.getMonth() < two.getMonth();
-}
-
-bool cmp_by_year(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "year".
-{
-    return one.getYear() < two.getYear();
-}
-
-bool cmp_by_detail(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID", then "average", etc...
-{
-
-    if (one.getID() != two.getID())
-    {
-        return one.getID() < two.getID();
-    }
-
-    if (one.getAverage() != two.getAverage())
-    {
-        return one.getAverage() < two.getAverage();
-    }
-
-    if (one.getName() != two.getName())
-    {
-        return one.getName() < two.getName();
-    }
-
-    if (one.getSurname() != two.getSurname())
-    {
-        return one.getSurname() < two.getSurname();
-    }
-
-    if (one.getCity() != two.getCity())
-    {
-        return one.getCity() < two.getCity();
-    }
-
-    if (one.getDay() != two.getDay())
-    {
-        return one.getDay() < two.getDay();
-    }
-
-    if (one.getMonth() != two.getMonth())
-    {
-        return one.getMonth() < two.getMonth();
-    }
-
-    if (one.getYear() != two.getYear())
-    {
-        return one.getYear() < two.getYear();
-    }
-
-    return true;
-}
-
-void sortVectorByID(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getID() < two.getID(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_id);
-}
-
-void sortVectorByAverage(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getAverage() < two.getAverage(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_average);
-}
-
-void sortVectorByName(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getName() < two.getName(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_name);
+	return (linkedList*)first;
 
 }
 
-void sortVectorBySurname(std::vector<NotLearning>& newClass)
+//A FUNCTION TO ADD A NEW NODE AT THE END OF THE LIST
+PUBLIC void* AddAfterTheLastNode(void** voidPtr, int total_amount)
 {
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getSurname() < two.getSurname(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_surname);
+	linkedList** head = (linkedList**)(voidPtr);
+
+	fprintf(stdout, "%d new nodes will be added to the list. So, the list will enlarge rightward...\n", total_amount);
+
+	linkedList* first = *head;
+	int i;
+	for (i = 0; i < total_amount; i++)
+		first = AppendToRight(&first);
+
+	return (linkedList*)first;
+}
+
+PUBLIC void* AddNewNodesBetweenTwo(void** voidPtr, int position_X, int total_amount)
+{
+	
+	linkedList** head = (linkedList**)(voidPtr);
+
+	linkedList* first = *head;
+	linkedList* second = first->nextPtr;
+
+	if (first != NULL && second != NULL)
+	{
+		fprintf(stdout, "The list is suitable to proceed...\n");
+
+		for (int x = 0; x < position_X; x++)
+		{
+			first = first->nextPtr;
+			second = second->nextPtr;
+		}
+
+		linkedList* temporary = NULL;
+		for (int i = 0; i < total_amount; i++)
+			temporary = AppendToRight(&temporary);
+
+		if (temporary != NULL)
+		{
+			ShowLinkedList(temporary);
+
+			first->nextPtr = temporary;
+
+			for (; temporary->nextPtr != NULL; temporary = temporary->nextPtr)
+				;
+
+			temporary->nextPtr = second;
+
+			return (linkedList*)(*head);
+		}
+		fprintf(stderr, " temporary list could not be created. Returning NULL...\n"); return NULL;
+	}
+	else
+	{
+		fprintf(stderr, "There are nodes less than 2. Returning NULL...\n"); return NULL;
+	}
 
 }
 
-void sortVectorByCity(std::vector<NotLearning>& newClass)
+//A FUNCTION TO SHOW WHOLE LINKED LIST
+PUBLIC void ShowLinkedList(void* voidPtr)
 {
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getCity() < two.getCity(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_city);
+	linkedList* head = (linkedList*)(voidPtr);
 
+	if (head == NULL)
+		exit(EXIT_FAILURE);
+
+	linkedList* first = head;
+	int counter = 0;
+
+	puts("*************************************************************");
+	puts(" #    ID   AVERAGE NAME       SURNAME    CITY          YEAR MONTH   DAY");
+	for (; first != NULL; first = first->nextPtr, counter++)
+		printf("%03d.  %.4d %-7.2lf %-10s %-10s %-13s %d %-7s %d\n", counter, first->ID, first->average, first->name, first->surname, first->city, first->year, first->month, first->day);
+
+	printf("(Total [%d] member exist.)\n\n\n", counter);
 }
 
-void sortVectorByDay(std::vector<NotLearning>& newClass)
+// A FUNCTION TO WRITE LINKED LIST TO TEXT FILE
+PUBLIC void SaveLinkedList(void* voidPtr)
 {
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getDay() < two.getDay(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_day);
+	linkedList* head = (linkedList*)(voidPtr);
+	int counter = 0;
+	FILE* fp = fopen("LinkedListResults.txt", "w");
+	if (!fp)
+	{
+		exit(EXIT_FAILURE);
+	}
 
-}
+	fprintf(fp, " #    ID   AVERAGE NAME       SURNAME    CITY          YEAR MONTH   DAY\n");
 
-void sortVectorByMonth(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getMonth() < two.getMonth(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_month);
+	while (head != NULL)
+	{
+		fprintf(fp, "%03d.  %.4d %-7.2lf %-10s %-10s %-13s %d %-7s %d\n", counter, head->ID, head->average, head->name, head->surname, head->city, head->year, head->month, head->day);	counter++;
+		head = head->nextPtr;
+	}
 
-}
+	fprintf(fp, "(Total [%d] member exist.)\n\n\n", counter);
 
-void sortVectorByYear(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getYear() < two.getYear(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_year);
-
-}
-
-void sortVectorByDetail(std::vector<NotLearning>& newClass)
-{
-    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getYear() < two.getYear(); });
-    std::sort(newClass.begin(), newClass.end(), cmp_by_detail);
+	fclose(fp);
 }
