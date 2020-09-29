@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "Database.h"
+#include "LearningVectors.h"
 
 #define check_leap(year) ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0)) // Return 1 / 0 if the year is leap year or not.
 
-NotLearning::NotLearning()   
+NotLearning::NotLearning()
 {
 
     ID = rand() % 1001 + 101;
@@ -31,7 +31,7 @@ NotLearning::NotLearning()
                                  "Florida", "Georgia", "Hawaii", "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida"
     };
     city = cityList[rand() % 80];
-    
+
     year = rand() % (2020 - 1989 + 1) + 1989;
     static const int daytabs[][13] = {
                 {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
@@ -160,9 +160,9 @@ void fillVector(std::vector<NotLearning>& newClass, const int TotalStudent)
 
 void fillVectorByText(std::vector<NotLearning>& newClass, const int TotalStudent)
 {
-    
+
     FILE* FileHandler[5];
-    const char* FileNames[] = {"143", "430", "691", "800", "1053"};
+    const char* FileNames[] = { "143", "430", "691", "800", "1053" };
 
     for (int i = 0; i < TotalStudent; i++)
     {
@@ -187,7 +187,7 @@ void fillVectorByText(std::vector<NotLearning>& newClass, const int TotalStudent
         }
         else
         {
-            if (fscanf(FileHandler[i], "%lf %s %s %s %d %s %d",&tempAverages, tempNames, tempSurnames, tempCity, &tempDay, tempMonth, &tempYear)) {}
+            if (fscanf(FileHandler[i], "%lf %s %s %s %d %s %d", &tempAverages, tempNames, tempSurnames, tempCity, &tempDay, tempMonth, &tempYear)) {}
             newClass[i].setAverage(tempAverages);
             newClass[i].setName(tempNames);
             newClass[i].setSurname(tempSurnames);
@@ -223,12 +223,12 @@ void showVector(const std::vector<NotLearning>& newClass)
 void saveVector(const std::vector<NotLearning>& newClass)
 {
     std::vector<std::string> FileNames;
-    for (int i = 0; i < 5; i++)
+    for (unsigned int i = 0; i < 5; i++)
     {
         FileNames.push_back(std::to_string(newClass[i].getID()));
     }
-        
-    for (int i = 0; i < FileNames.size(); i++)
+
+    for (unsigned int i = 0; i < FileNames.size(); i++)
     {
         std::ofstream FileHandler;
         FileHandler.open(FileNames[i]);
@@ -284,7 +284,7 @@ bool cmp_by_year(const NotLearning& one, const NotLearning& two) // compare clas
 
 bool cmp_by_detail(const NotLearning& one, const NotLearning& two) // compare classes inside the vector by checking the member of "ID", then "average", etc...
 {
-    
+
     if (one.getID() != two.getID())
     {
         return one.getID() < two.getID();
@@ -331,13 +331,13 @@ bool cmp_by_detail(const NotLearning& one, const NotLearning& two) // compare cl
 void sortVectorByID(std::vector<NotLearning>& newClass)
 {
     //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getID() < two.getID(); });
-     std::sort(newClass.begin(), newClass.end(), cmp_by_id);
+    std::sort(newClass.begin(), newClass.end(), cmp_by_id);
 }
 
 void sortVectorByAverage(std::vector<NotLearning>& newClass)
 {
     //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getAverage() < two.getAverage(); });
-    std::sort(newClass.begin(), newClass.end(),cmp_by_average);
+    std::sort(newClass.begin(), newClass.end(), cmp_by_average);
 }
 
 void sortVectorByName(std::vector<NotLearning>& newClass)
@@ -377,8 +377,8 @@ void sortVectorByMonth(std::vector<NotLearning>& newClass)
 
 void sortVectorByYear(std::vector<NotLearning>& newClass)
 {
-   //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getYear() < two.getYear(); });
-     std::sort(newClass.begin(), newClass.end(), cmp_by_year);
+    //std::sort(newClass.begin(), newClass.end(), [](NotLearning& one, NotLearning& two) { return one.getYear() < two.getYear(); });
+    std::sort(newClass.begin(), newClass.end(), cmp_by_year);
 
 }
 
