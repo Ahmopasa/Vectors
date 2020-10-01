@@ -53,16 +53,6 @@ void MyVector::setID(int newID)
 	ID = newID;
 }
 
-int MyVector::getDay()const
-{
-	return day;
-}
-
-int MyVector::getYear()const
-{
-	return year;
-}
-
 double MyVector::getAverage()const
 {
 	return average;
@@ -78,10 +68,9 @@ std::string MyVector::getName()const
 	return name;
 }
 
-void MyVector::setName(char* _newName)
+void MyVector::setName(std::string _newName)
 {
-	std::string newName(_newName);
-	this->name = newName;
+	this->name = _newName;
 }
 
 std::string MyVector::getSurname()const
@@ -89,10 +78,9 @@ std::string MyVector::getSurname()const
 	return surname;
 }
 
-void MyVector::setSurname(char* _newSurname)
+void MyVector::setSurname(std::string _newSurname)
 {
-	std::string newSurname(_newSurname);
-	this->surname = newSurname;
+	this->surname = _newSurname;
 }
 
 std::string MyVector::getCity()const
@@ -100,10 +88,19 @@ std::string MyVector::getCity()const
 	return city;
 }
 
-void MyVector::setCity(char* _newCity)
+void MyVector::setCity(std::string _newCity)
 {
-	std::string newCity(_newCity);
-	this->city = newCity;
+	this->city = _newCity;
+}
+
+int MyVector::getDay()const
+{
+	return day;
+}
+
+int MyVector::getYear()const
+{
+	return year;
 }
 
 std::string MyVector::getMonth()const
@@ -111,7 +108,7 @@ std::string MyVector::getMonth()const
 	return month;
 }
 
-void MyVector::setDates(int newYear, const char* newMonth, int newDay)
+void MyVector::setDates(int newYear, const std::string newMonth, int newDay)
 {
 	year = newYear;
 
@@ -119,12 +116,12 @@ void MyVector::setDates(int newYear, const char* newMonth, int newDay)
 				{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
 				{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
 	};
-	static const char* pmons[] = { "","January","February","March","April","May","June","July","August","September","October","November","December" };
+	static const std::string pmons[] = { "","January","February","March","April","May","June","July","August","September","October","November","December" };
 
 	int month_counter = 0;
 	for (int i = 0; i < 13; i++)
 	{
-		if (!strcmp(newMonth, pmons[i]))
+		if (!((this->month).compare(newMonth)))
 			month_counter++;
 	}
 	int tempDay = daytabs[check_leap(year)][month_counter];
@@ -133,12 +130,12 @@ void MyVector::setDates(int newYear, const char* newMonth, int newDay)
 		day = newDay;
 	}
 
-	std::string tempMonth(newMonth);
-	this->month = tempMonth;
+	this->month = newMonth;
 }
 
-void fillVector(std::vector<MyVector>& newClass, const int TotalStudent)
+void fillVector(std::vector<MyVector>& newClass, const int& TotalStudent)
 {
+	//srand((unsigned int)time(NULL));
 	if (TotalStudent > 0)
 	{
 		for (int i = 0; i < TotalStudent; i++)
@@ -150,46 +147,7 @@ void fillVector(std::vector<MyVector>& newClass, const int TotalStudent)
 	else
 	{
 		std::cout << "Please, enter a numeric value that does not contain numbers below 0 and alphabetical chars." << std::endl;
-		exit(-1);
-	}
-}
-
-void fillVectorByText(std::vector<MyVector>& newClass, const int TotalStudent)
-{
-	FILE* FileHandler[5];
-	const char* FileNames[] = { "143", "430", "691", "800", "1053" };
-
-	for (int i = 0; i < TotalStudent; i++)
-	{
-		MyVector newStudent;
-		newClass.push_back(newStudent);
-	}
-
-	double tempAverages = .0;
-	char tempNames[20] = " ";
-	char tempSurnames[20] = " ";;
-	char tempCity[20] = " ";;
-	int tempDay = 0;
-	char tempMonth[20] = " ";;
-	int tempYear = 0;
-
-	for (int i = 0; i < 5; i++)
-	{
-		FileHandler[i] = fopen(FileNames[i], "r");
-		if (!FileHandler[i])
-		{
-			std::cout << "Failed to open the file. Name: " << FileNames[i] << std::endl;
-		}
-		else
-		{
-			if (fscanf(FileHandler[i], "%lf %19s %19s %19s %d %19s %d", &tempAverages, tempNames, tempSurnames, tempCity, &tempDay, tempMonth, &tempYear)) {}
-			newClass[i].setAverage(tempAverages);
-			newClass[i].setName(tempNames);
-			newClass[i].setSurname(tempSurnames);
-			newClass[i].setCity(tempCity);
-			newClass[i].setDates(tempYear, tempMonth, tempDay);
-			fclose(FileHandler[i]);
-		}
+		exit(EXIT_FAILURE);
 	}
 }
 
