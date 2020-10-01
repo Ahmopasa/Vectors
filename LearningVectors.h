@@ -1,6 +1,6 @@
 #ifndef LEARNINGVECTORS_H
 #define LEARNINGVECTORS_H
-//#define DebugMessages // Used to activa debugging messages. ( Make it uncomment )
+//#define DebugMessages // Used to activate debugging messages. ( Make it uncomment )
 
 /******************************* A Place To Define Related Macros ******************************/
 #ifdef  DebugMessages
@@ -26,27 +26,26 @@ class MyVector {
 public:
 	MyVector(); // Constructor
 
-	int getID()const; // Function to used to initialize private variable "ID" of the class via the constructor.
+	int getID()const; 
 	void setID(int);
 
-	int getDay()const; // Function to used to initialize private variable "day" of the class via the constructor.
-	int getYear()const; // Function to used to initialize private variable "year" of the class via the constructor.
-
-	double getAverage()const; // Function to used to initialize private variable "average" of the class via the constructor.
+	double getAverage()const;
 	void setAverage(double);
 
-	std::string getName()const; // Function to used to initialize private variable "name" of the class via the constructor.
-	void setName(char*);
+	std::string getName()const;
+	void setName(std::string);
 
-	std::string getSurname()const; // Function to used to initialize private variable "surname" of the class via the constructor.
-	void setSurname(char*);
+	std::string getSurname()const; 
+	void setSurname(std::string);
 
-	std::string getCity()const; // Function to used to initialize private variable "city" of the class via the constructor.
-	void setCity(char*);
+	std::string getCity()const; 
+	void setCity(std::string);
 
-	std::string getMonth()const; // Function to used to initialize private variable "month" of the class via the constructor.
+	int getDay()const;
+	int getYear()const;
+	std::string getMonth()const; 
+	void setDates(int, const std::string, int);
 
-	void setDates(int, const char*, int);
 
 private:
 	int ID;
@@ -62,8 +61,7 @@ private:
 };
 
 /******************************* A Place To Define Global Functions *******************************/
-void fillVector(std::vector<MyVector>&, const int);
-void fillVectorByText(std::vector<MyVector>&, const int);
+void fillVector(std::vector<MyVector>&, const int&);
 void showVector(const std::vector<MyVector>&);
 void saveVector(const std::vector<MyVector>&);
 void copyVector(const std::vector<MyVector>&, std::vector<MyVector>&);
