@@ -7,7 +7,7 @@
 /******************************* A Place To Define Global Variables *****************************/
 
 /******************************* A Place To Define Class Members *****************************/
-MyVector::MyVector()
+MyClass::MyClass()
 {
 	ID = rand() % 1001 + 101;
 	average = ((double)rand() * (100. - 0.)) / (double)RAND_MAX + 0.;
@@ -45,7 +45,7 @@ MyVector::MyVector()
 	day = rand() % tempDay + 1;
 }
 
-MyVector::MyVector(std::string& ID, std::string& average, std::string& name, std::string& surname, std::string& city, std::string& day, std::string& month, std::string& year)
+MyClass::MyClass(std::string& ID, std::string& average, std::string& name, std::string& surname, std::string& city, std::string& day, std::string& month, std::string& year)
 {
 	//std::cout << "Before Single Push Back => " << average << " " << name << " " << surname << " " << city << " " << day << " " << month << " " << year << "\n";
 
@@ -59,99 +59,87 @@ MyVector::MyVector(std::string& ID, std::string& average, std::string& name, std
 	//std::cout << "Before Single Push Back 2  => " << getID() << " " << getAverage() << " " << getName() << " " << getSurname() << " " << getCity() << " " <<getDay() << " " << getMonth() << " " << getYear() << "\n";
 }
 
-int MyVector::getID()const
+int MyClass::getID()const
 {
 	return ID;
 }
 
-void MyVector::setID(std::string& newID)
+void MyClass::setID(std::string& newID)
 {
 	ID = std::stoi(newID);	 
 }
 
-double MyVector::getAverage()const
+double MyClass::getAverage()const
 {
 	return average;
 }
 
-void MyVector::setAverage(std::string& temp_average)
+void MyClass::setAverage(std::string& temp_average)
 {
 	average = std::stod(temp_average);
 }
 
-std::string MyVector::getName()const
+std::string MyClass::getName()const
 {
 	return name;
 }
 
-void MyVector::setName(std::string& _newName)
+void MyClass::setName(std::string& newName)
 {
-	this->name = _newName;
+	this->name = newName;
 }
 
-std::string MyVector::getSurname()const
+std::string MyClass::getSurname()const
 {
 	return surname;
 }
 
-void MyVector::setSurname(std::string& _newSurname)
+void MyClass::setSurname(std::string& newSurname)
 {
-	this->surname = _newSurname;
+	this->surname = newSurname;
 }
 
-std::string MyVector::getCity()const
+std::string MyClass::getCity()const
 {
 	return city;
 }
 
-void MyVector::setCity(std::string& _newCity)
+void MyClass::setCity(std::string& newCity)
 {
-	this->city = _newCity;
+	this->city = newCity;
 }
 
-int MyVector::getDay()const
+int MyClass::getDay()const
 {
 	return day;
 }
 
-std::string MyVector::getMonth()const
+std::string MyClass::getMonth()const
 {
 	return month;
 }
 
-int MyVector::getYear()const
+int MyClass::getYear()const
 {
 	return year;
 }
 
-void MyVector::setDates (std::string& newDay, std::string& newMonth, std::string& newYear)
+void MyClass::setDates (std::string& newDay, std::string& newMonth, std::string& newYear)
 {
 
-	static const std::string pmons[] = { "","January","February","March","April","May","June","July","August","September","October","November","December" };
-	int i;
-	for (i = 0; i < 13; i++)
-		if (!pmons[i].compare(newMonth))
-			month = newMonth;
-
-	static const int daytabs[][13] = {
-			{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-			{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-	};
 	year = std::stoi(newYear);
-	int tempDay = std::stoi(newDay);
-	int indexDay = daytabs[check_leap(year)][i];
-	if (tempDay <= indexDay)
-		day = tempDay;
+	day = std::stoi(newDay);
+	month = newMonth;
 }
 
-void fillVectorRandomly(std::vector<MyVector>& newClass, const int& TotalStudent)
+void fillVectorRandomly(std::vector<MyClass>& myVector, const int& TotalStudent)
 {
 	if (TotalStudent > 0)
 	{
 		for (int i = 0; i < TotalStudent; i++)
 		{
-			MyVector newStudent;
-			newClass.push_back(newStudent);
+			MyClass newStudent;
+			myVector.push_back(newStudent);
 		}
 	}
 	else
@@ -161,19 +149,18 @@ void fillVectorRandomly(std::vector<MyVector>& newClass, const int& TotalStudent
 	}
 }
 
-void fillVectorViaText(std::vector<MyVector>& newClass)
+void fillVectorViaText(std::vector<MyClass>& myVector)
 {
 	std::ifstream FileHandler;
-	std::vector<std::string> temp_studentID;
+	std::vector<std::string> myStringVector;
 	std::string temp_string;
-
 	FileHandler.open("List_Of_Vector_Elements");
 	if (FileHandler.good())
 	{
 		while (FileHandler.good())
 		{
 			std::getline(FileHandler, temp_string);
-			temp_studentID.push_back(temp_string);
+			myStringVector.push_back(temp_string);
 		}
 		FileHandler.close();
 	}
@@ -181,9 +168,7 @@ void fillVectorViaText(std::vector<MyVector>& newClass)
 	{
 		std::cout << "Unable to open file: List_Of_Vector_Elements. " << "\n";
 	}
-
-	const unsigned int Class_Vector_Size = temp_studentID.size();
-	
+	const unsigned int String_Vector_Size = myStringVector.size();
 	std::string ID = "temp_ID";
 	std::string average = "temp_average";
 	std::string surname = "temp_surname";
@@ -192,50 +177,45 @@ void fillVectorViaText(std::vector<MyVector>& newClass)
 	std::string day = "temp_day";
 	std::string month = "temp_month";
 	std::string year = "temp_year";
-
-	for (unsigned int i = 0; i < Class_Vector_Size; i++)
+	for (unsigned int i = 0; i < String_Vector_Size; i++)
 	{
 		std::ifstream MainHandler;
-		MainHandler.open(temp_studentID[i]);
+		MainHandler.open(myStringVector[i]);
 		while (MainHandler >> average >> name >> surname >> city >> day >> month >> year)
 		{
-			std::cout << "Before New Vector       => "<< average << " " << name << " " << surname << " " << city << " " << day << " " << month << " " << year << "\n";
-			MyVector newstudent(temp_studentID[i], average, name, surname, city, day, month, year);
-			newClass.push_back(newstudent);
-			
-			std::cout << "After Single Push Back  => " << newClass[i].getID() << " " << newClass[i].getAverage() << " " << newClass[i].getName() << " " << newClass[i].getSurname() << " " << newClass[i].getCity() << " " << newClass[i].getDay() << " " << newClass[i].getMonth() << " " << newClass[i].getYear() << "\n";
-			
+			MyClass newstudent(myStringVector[i], average, name, surname, city, day, month, year);
+			myVector.push_back(newstudent);			
 			std::cout << "\n";
 		}
 		MainHandler.close();
 	}
 }
 
-void showVector(const std::vector<MyVector>& newClass)
+void showVector(const std::vector<MyClass>& myVector)
 {
-	size_t size = newClass.size();
+	size_t size = myVector.size();
 	std::cout << "Total size of vector: " << size << std::endl;
-	std::cout << "Total capacity of vector: " << newClass.capacity() << std::endl;
+	std::cout << "Total capacity of vector: " << myVector.capacity() << std::endl;
 	std::cout << "             ID   Average Name       Surname    City            Day Month    Year" << std::endl;
 	for (size_t i = 0; i < size; i++)
 	{
 		std::cout << "Person:" << std::left << std::setw(2) << i << " => " << std::flush;
-		std::cout << std::left << std::setw(4) << newClass[i].getID() << " " << std::flush;
-		std::cout << std::left << std::setw(7) << std::setprecision(4) << newClass[i].getAverage() << " " << std::flush;
-		std::cout << std::left << std::setw(10) << newClass[i].getName() << " " << std::flush;
-		std::cout << std::left << std::setw(10) << newClass[i].getSurname() << " " << std::flush;
-		std::cout << std::left << std::setw(15) << newClass[i].getCity() << " " << std::flush;
-		std::cout << std::left << std::setw(3) << newClass[i].getDay() << " " << std::flush;
-		std::cout << std::left << std::setw(8) << newClass[i].getMonth() << " " << std::flush;
-		std::cout << std::left << std::setw(4) << newClass[i].getYear() << " " << std::flush;
+		std::cout << std::left << std::setw(4) << myVector[i].getID() << " " << std::flush;
+		std::cout << std::left << std::setw(7) << std::setprecision(4) << myVector[i].getAverage() << " " << std::flush;
+		std::cout << std::left << std::setw(10) << myVector[i].getName() << " " << std::flush;
+		std::cout << std::left << std::setw(10) << myVector[i].getSurname() << " " << std::flush;
+		std::cout << std::left << std::setw(15) << myVector[i].getCity() << " " << std::flush;
+		std::cout << std::left << std::setw(3) << myVector[i].getDay() << " " << std::flush;
+		std::cout << std::left << std::setw(8) << myVector[i].getMonth() << " " << std::flush;
+		std::cout << std::left << std::setw(4) << myVector[i].getYear() << " " << std::flush;
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
 }
 
-void saveVector(const std::vector<MyVector>& newClass)
+void saveVector(const std::vector<MyClass>& myVector)
 {
-	const unsigned int Vector_Size = newClass.size();
+	const unsigned int Vector_Size = myVector.size();
 	std::ofstream* FileHandler = new std::ofstream[Vector_Size];
 	if (!FileHandler)
 	{
@@ -245,66 +225,66 @@ void saveVector(const std::vector<MyVector>& newClass)
 	{
 		for (unsigned int i = 0; i < Vector_Size; i++)
 		{
-			FileHandler[i].open(std::to_string(newClass[i].getID()));
-			FileHandler[i] << newClass[i].getAverage() << " " << newClass[i].getName() << " " << newClass[i].getSurname() << " " << newClass[i].getCity() << " " << newClass[i].getDay() << " " << newClass[i].getMonth() << " " << " " << newClass[i].getYear() << " " << std::endl;
+			FileHandler[i].open(std::to_string(myVector[i].getID()));
+			FileHandler[i] << myVector[i].getAverage() << " " << myVector[i].getName() << " " << myVector[i].getSurname() << " " << myVector[i].getCity() << " " << myVector[i].getDay() << " " << myVector[i].getMonth() << " " << " " << myVector[i].getYear() << " " << std::endl;
 
 			FileHandler[i].close();
 
 			std::ofstream MainHandler;
 			MainHandler.open("List_Of_Vector_Elements", std::ios_base::app);
-			MainHandler << newClass[i].getID() << "\n";
+			MainHandler << myVector[i].getID() << "\n";
 			MainHandler.close();
 		}
 		delete[] FileHandler;
 	}
 }
 
-void copyVector(const std::vector<MyVector>& newClass, std::vector<MyVector>& myNewClass)
+void copyVector(const std::vector<MyClass>& myVector, std::vector<MyClass>& myNewVector)
 {
-	myNewClass.assign(newClass.begin(), newClass.end());
+	myNewVector.assign(myVector.begin(), myVector.end());
 }
 
-static bool cmp_by_id(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_id(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return one.getID() < two.getID();
 }
 
-static bool cmp_by_average(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_average(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return (one.getAverage() < two.getAverage());
 }
 
-static bool cmp_by_name(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_name(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return one.getName() < two.getName();
 }
 
-static bool cmp_by_surname(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_surname(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return one.getSurname() < two.getSurname();
 }
 
-static bool cmp_by_city(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_city(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return one.getCity() < two.getCity();
 }
 
-static bool cmp_by_day(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID".
+static bool cmp_by_day(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID".
 {
 	return one.getDay() < two.getDay();
 }
 
-static bool cmp_by_month(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "month".
+static bool cmp_by_month(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "month".
 {
 	return one.getMonth() < two.getMonth();
 }
 
-static bool cmp_by_year(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "year".
+static bool cmp_by_year(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "year".
 {
 	return one.getYear() < two.getYear();
 }
 
-static bool cmp_by_detail(const MyVector& one, const MyVector& two) // compare classes inside the vector by checking the member of "ID", then "average", etc...
+static bool cmp_by_detail(const MyClass& one, const MyClass& two) // compare classes inside the vector by checking the member of "ID", then "average", etc...
 {
 	if (one.getID() != two.getID())
 	{
@@ -349,56 +329,56 @@ static bool cmp_by_detail(const MyVector& one, const MyVector& two) // compare c
 	return true;
 }
 
-void sortVectorByID(std::vector<MyVector>& newClass)
+void sortVectorByID(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getID() < two.getID(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_id);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getID() < two.getID(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_id);
 }
 
-void sortVectorByAverage(std::vector<MyVector>& newClass)
+void sortVectorByAverage(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getAverage() < two.getAverage(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_average);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getAverage() < two.getAverage(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_average);
 }
 
-void sortVectorByName(std::vector<MyVector>& newClass)
+void sortVectorByName(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getName() < two.getName(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_name);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getName() < two.getName(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_name);
 }
 
-void sortVectorBySurname(std::vector<MyVector>& newClass)
+void sortVectorBySurname(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getSurname() < two.getSurname(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_surname);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getSurname() < two.getSurname(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_surname);
 }
 
-void sortVectorByCity(std::vector<MyVector>& newClass)
+void sortVectorByCity(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getCity() < two.getCity(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_city);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getCity() < two.getCity(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_city);
 }
 
-void sortVectorByDay(std::vector<MyVector>& newClass)
+void sortVectorByDay(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getDay() < two.getDay(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_day);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getDay() < two.getDay(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_day);
 }
 
-void sortVectorByMonth(std::vector<MyVector>& newClass)
+void sortVectorByMonth(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getMonth() < two.getMonth(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_month);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getMonth() < two.getMonth(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_month);
 }
 
-void sortVectorByYear(std::vector<MyVector>& newClass)
+void sortVectorByYear(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getYear() < two.getYear(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_year);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getYear() < two.getYear(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_year);
 }
 
-void sortVectorByDetail(std::vector<MyVector>& newClass)
+void sortVectorByDetail(std::vector<MyClass>& myVector)
 {
-	//std::sort(newClass.begin(), newClass.end(), [](MyVector& one, MyVector& two) { return one.getYear() < two.getYear(); });
-	std::sort(newClass.begin(), newClass.end(), cmp_by_detail);
+	//std::sort(myVector.begin(), myVector.end(), [](MyClass& one, MyClass& two) { return one.getYear() < two.getYear(); });
+	std::sort(myVector.begin(), myVector.end(), cmp_by_detail);
 }
