@@ -25,27 +25,21 @@
 class MyVector {
 public:
 	MyVector(); // Constructor
+	MyVector(std::string&, std::string&, std::string&, std::string&, std::string&, std::string&, std::string&, std::string&); // Constructor FO
 
 	int getID()const; 
-	void setID(int);
 
 	double getAverage()const;
-	void setAverage(double);
 
 	std::string getName()const;
-	void setName(std::string);
 
 	std::string getSurname()const; 
-	void setSurname(std::string);
 
 	std::string getCity()const; 
-	void setCity(std::string);
 
 	int getDay()const;
+	std::string getMonth()const;
 	int getYear()const;
-	std::string getMonth()const; 
-	void setDates(int, const std::string, int);
-
 
 private:
 	int ID;
@@ -58,10 +52,19 @@ private:
 	std::string surname;
 	std::string city;
 	std::string month;
+
+private:
+	void setID(std::string&);
+	void setAverage(std::string&);
+	void setName(std::string&);
+	void setSurname(std::string&);
+	void setCity(std::string&);
+	void setDates(std::string&, std::string&, std::string&);
 };
 
-/******************************* A Place To Define Global Functions *******************************/
-void fillVector(std::vector<MyVector>&, const int&);
+/******************************* A Place To Declare Global Functions *******************************/
+void fillVectorRandomly(std::vector<MyVector>&, const int&);
+void fillVectorViaText(std::vector<MyVector>&);
 void showVector(const std::vector<MyVector>&);
 void saveVector(const std::vector<MyVector>&);
 void copyVector(const std::vector<MyVector>&, std::vector<MyVector>&);
